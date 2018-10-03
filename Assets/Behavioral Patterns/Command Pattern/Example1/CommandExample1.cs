@@ -30,6 +30,9 @@ namespace CommandExample1
 
             // Redo 3 commands
             user.Redo(3);
+            
+            user.Compute('+', 2000);
+            user.Undo(1);
         }
     }
 
@@ -132,6 +135,7 @@ namespace CommandExample1
 
         public void Redo(int levels)
         {
+            Debug.Log("\n---- Redo "+ levels + " levels");
             for (int i = 0; i < levels; i++)
             {
                 if (_current < _commands.Count - 1)
@@ -158,11 +162,13 @@ namespace CommandExample1
 
         public void Compute(char @operator, int operand)
         {
+            Debug.Log("\n---- Compute ");
             // Create command operation and execute it
             Command command = new CalculatorCommand(
               _calculator, @operator, operand);
             command.Execute();
-
+            
+            _commands.RemoveRange(_current, _commands.Count - _current);
             // Add command to undo list
             _commands.Add(command);
             _current++;
